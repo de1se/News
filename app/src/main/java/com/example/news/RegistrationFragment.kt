@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +25,7 @@ class RegistrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val accountDataManager = AccountDataManager(requireContext())
+        val accountDataManager = AccountDataManager(ViewModelProvider(this).get(UserViewModel::class.java), requireContext())
         if (accountDataManager.checkIsLogged()) {
             this.findNavController().navigate(R.id.action_authorizationFragment_to_mainMenu)
         }
@@ -37,8 +38,8 @@ class RegistrationFragment : Fragment() {
         activityBinding.registrationButton.setOnClickListener {
             if (activityBinding.termsOfService.isChecked) {
                 val inputedText = adapter.getInputedText()
-                val newUserData = AccountData(inputedText[0], inputedText[1], inputedText[2], inputedText[3])
-                if (DataValidator.isValidInput(requireContext(), newUserData)){
+                val newUserData = AccountData(inputedText[0], inputedText[1], inputedText[2])
+                if (DataValidator.isValidInput(requireContext(), newUserData, inputedText[3])){
                     accountDataManager.registerAccount(newUserData)
                     this.findNavController().navigate(R.id.action_authorizationFragment_to_mainMenu)
                 }
@@ -49,6 +50,7 @@ class RegistrationFragment : Fragment() {
             this.findNavController().navigate(R.id.action_registrationFragment_to_authorizationFragment)
         }
     }
+
 
     private fun getHintList(): MutableList<String> {
         return resources.getStringArray(R.array.hintList).toMutableList()

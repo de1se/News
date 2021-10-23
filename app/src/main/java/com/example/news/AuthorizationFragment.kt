@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +13,7 @@ import com.example.news.databinding.FragmentAuthorizationBinding
 
 class AuthorizationFragment : Fragment() {
     private lateinit var activityBinding: FragmentAuthorizationBinding
+    private lateinit var customUserViewModel: UserViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,7 +26,7 @@ class AuthorizationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val accountDataManager = AccountDataManager(requireContext())
+        val accountDataManager = AccountDataManager(ViewModelProvider(this).get(UserViewModel::class.java), requireContext())
         val recyclerView: RecyclerView = activityBinding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = CustomAdapter(getHintList(), getInputTypeList())
@@ -32,7 +34,7 @@ class AuthorizationFragment : Fragment() {
 
         activityBinding.authorizationButton.setOnClickListener {
             val inputedText = adapter.getInputedText()
-            if (accountDataManager.isValidData(inputedText[0], inputedText[1])) {
+            if (accountDataManager.isValidData(inputedText[0], inputedText[2])) {
                 accountDataManager.logInAccount()
                 this.findNavController().navigate(R.id.action_authorizationFragment_to_mainMenu)
             } else {

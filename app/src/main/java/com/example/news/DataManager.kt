@@ -3,28 +3,29 @@ package com.example.news
 import android.content.Context
 import android.content.SharedPreferences
 
-class DataManager(context: Context) {
+class DataManager(private val customUserViewModel: UserViewModel, context: Context) {
     private val APPLICATION_PREFERENCES = "Login"
     private val APPLICATION_PREFERENCES_IS_LOGGED = "IsLogged"
     private var sharedPreferences = context.getSharedPreferences(APPLICATION_PREFERENCES, Context.MODE_PRIVATE)
     private var editor: SharedPreferences.Editor = sharedPreferences.edit()
 
     fun writeData(accountData: AccountData) {
-        editor.putString(APPLICATION_PREFERENCES, "${accountData.login} ${accountData.email} ${accountData.password} ${accountData.repeatedPassword}")
+        val newUserData = User(0, accountData.login, accountData.email, accountData.password)
+        customUserViewModel.insertNewUser(newUserData)
+        editor.putString(APPLICATION_PREFERENCES, "${accountData.login} ${accountData.email} ${accountData.password}")
         editor.apply()
     }
 
     fun readData(): AccountData {
-        val tempString: List<String>? = sharedPreferences.getString(APPLICATION_PREFERENCES, "")?.split(" ")
-        val accountData: AccountData = if (tempString!!.isNotEmpty()) {
+        val temporaryString: List<String>? = sharedPreferences.getString(APPLICATION_PREFERENCES, "")?.split(" ")
+        val accountData: AccountData = if (temporaryString!!.isNotEmpty()) {
             AccountData(
-                tempString[0],
-                tempString[1],
-                tempString[2],
-                tempString[3]
+                temporaryString[0],
+                temporaryString[1],
+                temporaryString[2]
             )
         } else {
-            AccountData("", "", "", "")
+            AccountData("", "", "")
         }
         return accountData
     }

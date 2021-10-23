@@ -13,5 +13,5 @@ class MainActivity : AppCompatActivity() {
         activityBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         val navigationController = activityBinding.fragmentContainerView
-        }
+    }
 }

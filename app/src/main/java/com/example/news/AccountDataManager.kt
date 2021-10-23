@@ -2,8 +2,8 @@ package com.example.news
 
 import android.content.Context
 
-class AccountDataManager(context: Context) {
-    private val dataManager = DataManager(context)
+class AccountDataManager(customUserViewModel: UserViewModel, context: Context) {
+    private val dataManager = DataManager(customUserViewModel, context)
 
     fun registerAccount(data: AccountData) {
         dataManager.writeData(data)
@@ -20,6 +20,7 @@ class AccountDataManager(context: Context) {
 
     fun isValidData(login: String, password: String): Boolean {
         val userData = dataManager.readData()
+
         return userData.login.equals(login) && userData.password.equals(password)
     }
 

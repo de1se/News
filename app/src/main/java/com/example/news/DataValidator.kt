@@ -5,7 +5,7 @@ import android.util.Patterns
 import android.widget.Toast
 
 object DataValidator {
-    fun isValidInput(context: Context, accountInformation: AccountData): Boolean {
+    fun isValidInput(context: Context, accountInformation: AccountData, repeatedPassword: String): Boolean {
         if (!isValidLogin(context, accountInformation.login)) {
             return false
         }
@@ -14,7 +14,7 @@ object DataValidator {
             return false
         }
 
-        if (!isValidPassword(context, accountInformation.password, accountInformation.repeatedPassword)) {
+        if (!isValidPassword(context, accountInformation.password, repeatedPassword)) {
             return false
         }
 

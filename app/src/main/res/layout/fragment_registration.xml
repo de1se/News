@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:background="@drawable/background" >
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        tools:listitem="@layout/recycler_view">
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <CheckBox
+        android:id="@+id/termsOfService"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:textColor="#E7D2D5"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="@string/termsOfService" />
+
+    <Button
+        android:id="@+id/registrationButton"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_width="210dp"
+        android:layout_height="40dp"
+        android:background="#1C1C19"
+        android:textColor="#E7D2D5"
+        android:text="@string/registrationButton" />
+
+    <Button
+        android:id="@+id/switchToAuthorizationButton"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:textColor="#E7D2D5"
+        android:text="@string/switchToAuthorizationButton" />
+</LinearLayout>

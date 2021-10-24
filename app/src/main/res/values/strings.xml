@@ -4,14 +4,17 @@
     <string name="authorizationButton">Авторизация</string>
     <string name="switchToAuthorizationButton">Уже есть аккаунт?</string>
     <string name="switchToRegistrationButton">Создать новый аккаунт!</string>
+    <string name="exitFromAccountButton">Выйти из аккаунта</string>
     <string name="termsOfService">Я принимаю условия пользовательского соглашения</string>
     <string name="ERROR_MESSAGE_LOGIN_EMPTY">Поле логина должно быть заполнено!</string>
+    <string name="ERROR_MESSAGE_LOGIN_EXISTS">Логин уже занят!</string>
     <string name="ERROR_MESSAGE_EMAIL_EMPTY">Поле почтового адреса должно быть заполнено!</string>
+    <string name="ERROR_MESSAGE_EMAIL_EXISTS">Почтовый адрес занят!</string>
     <string name="ERROR_MESSAGE_EMAIL_INVALID">Неправильный почтовый адрес!</string>
     <string name="ERROR_MESSAGE_PASSWORD_EMPTY">Поле пароля должно быть заполнено!</string>
-    <string name="ERROR_MESSAGE_REPEATED_PASSWORD_EMPTY">Повторите пароль!</string>
     <string name="ERROR_MESSAGE_PASSWORD_DIFFERENT">Пароли не совпадают!</string>
-    <string name="ERROR_MESSAGE_ACCOUNT_DOES_NOT_EXIST">Такого аккаунта не существует!</string>
+    <string name="ERROR_MESSAGE_REPEATED_PASSWORD_EMPTY">Повторите пароль!</string>
+    <string name="ERROR_MESSAGE_ACCOUNT_DOES_NOT_EXISTS">Такого аккаунта не существует!</string>
     <string-array name="hintList">
         <item>Логин</item>
         <item>E-mail</item>

@@ -4,9 +4,9 @@ import androidx.room.PrimaryKey
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 
-@Entity(tableName = "user_database")
-data class User(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+@Entity(tableName = "account_database")
+data class Account(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "login") val login: String?,
     @ColumnInfo(name = "email") val email: String?,
     @ColumnInfo(name = "password") val password: String?

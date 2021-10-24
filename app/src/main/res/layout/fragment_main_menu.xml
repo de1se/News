@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainMenu">
+    tools:context=".MainMenu"
+    android:orientation="vertical"
+    android:background="@drawable/background">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="Welcome!"
-        android:layout_gravity="center"/>
-</androidx.core.widget.NestedScrollView>
+    <Button
+        android:id="@+id/exitFromAccountButton"
+        android:layout_width="210dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="300dp"
+        android:layout_gravity="center_horizontal"
+        android:background="#1C1C19"
+        android:text="@string/exitFromAccountButton"
+        android:textColor="#E7D2D5" />
+</LinearLayout>

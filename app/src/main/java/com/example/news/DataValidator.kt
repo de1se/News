@@ -5,12 +5,17 @@ import android.util.Patterns
 import android.widget.Toast
 
 object DataValidator {
-    fun isValidInput(context: Context, accountInformation: AccountData, repeatedPassword: String): Boolean {
+    fun isValidInput(context: Context, accountDao: AccountDao, accountInformation: Account, repeatedPassword: String): Boolean {
         if (!isValidLogin(context, accountInformation.login)) {
             return false
         }
 
-        if (!isValidEmail(context, accountInformation.email)) {
+        if (accountDao.isLoginExist(accountInformation.login)) {
+            showToast(context.getString(R.string.ERROR_MESSAGE_LOGIN_EXISTS), context)
+            return false
+        }
+
+        if (!isValidEmail(context, accountDao, accountInformation.email)){
             return false
         }
 
@@ -20,9 +25,26 @@ object DataValidator {
 
         return true
     }
+
+    fun isValidInput(context: Context, accountDao: AccountDao, login: String?, password: String?): Boolean {
+        if (!isValidLogin(context, login)) {
+            return false
+        }
+
+        if (!isExist(accountDao, login)) {
+            showToast(context.getString(R.string.ERROR_MESSAGE_ACCOUNT_DOES_NOT_EXISTS), context)
+            return false
+        }
+
+        if (!isValidPassword(context, accountDao, login, password)){
+            return false
+        }
+
+        return true
+    }
     
-    private fun isValidLogin(context: Context, login: String): Boolean {
-        return if (login.isEmpty()) {
+    private fun isValidLogin(context: Context, login: String?): Boolean {
+        return if (login!!.isEmpty()) {
             showToast(context.getString(R.string.ERROR_MESSAGE_LOGIN_EMPTY), context)
             false
         } else {
@@ -30,8 +52,8 @@ object DataValidator {
         }
     }
 
-    private fun isValidEmail(context: Context, email: String): Boolean {
-        if (email.isEmpty()) {
+    private fun isValidEmail(context: Context, accountDao: AccountDao, email: String?): Boolean {
+        if (email!!.isEmpty()) {
             showToast(context.getString(R.string.ERROR_MESSAGE_EMAIL_EMPTY), context)
             return false
         }
@@ -41,11 +63,16 @@ object DataValidator {
             return false
         }
 
+        if (accountDao.isEmailExist(email)) {
+            showToast(context.getString(R.string.ERROR_MESSAGE_EMAIL_EXISTS), context)
+            return false
+        }
+
         return true
     }
 
-    private fun isValidPassword(context: Context, password: String, repeatedPassword: String): Boolean {
-        if (password.isEmpty()) {
+    private fun isValidPassword(context: Context, password: String?, repeatedPassword: String): Boolean {
+        if (password!!.isEmpty()) {
             showToast(context.getString(R.string.ERROR_MESSAGE_PASSWORD_EMPTY), context)
             return false
         }
@@ -63,7 +90,25 @@ object DataValidator {
         return true
     }
 
-    fun showToast(message: String, context: Context) {
+    private fun isValidPassword(context: Context, accountDao: AccountDao, login: String?, password: String?): Boolean {
+        if (password!!.isEmpty()) {
+            showToast(context.getString(R.string.ERROR_MESSAGE_PASSWORD_EMPTY), context)
+            return false
+        }
+
+        if(!accountDao.findByLogin(login!!).password.equals(password)) {
+            showToast("Неправильный логин или пароль!", context)
+            return false
+        }
+
+        return true
+    }
+
+    private fun isExist(accountDao: AccountDao, login: String?): Boolean {
+        return accountDao.isLoginExist(login)
+    }
+
+    private fun showToast(message: String, context: Context) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }

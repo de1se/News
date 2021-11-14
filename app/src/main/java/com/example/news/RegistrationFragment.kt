@@ -13,11 +13,6 @@ import com.example.news.databinding.FragmentRegistrationBinding
 class RegistrationFragment : Fragment() {
     private lateinit var activityBinding: FragmentRegistrationBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,15 +35,17 @@ class RegistrationFragment : Fragment() {
         recyclerView.adapter = CustomAdapter(getHintList(), getInputTypeList())
         val adapter = recyclerView.adapter as CustomAdapter
 
+        activityBinding.termsOfService.setOnClickListener {
+            activityBinding.registrationButton.isEnabled = activityBinding.termsOfService.isChecked
+        }
+
         activityBinding.registrationButton.setOnClickListener {
-            if (activityBinding.termsOfService.isChecked) {
-                val inputedText = adapter.getInputedText()
-                val newAccountData = Account(0, inputedText[0], inputedText[1], inputedText[2])
-                if (DataValidator.isValidInput(requireContext(), (activity as MainActivity).accountDao, newAccountData, inputedText[3])){
-                    accountDataManager.logInAccount(newAccountData)
-                    (activity as MainActivity).accountDao.insertNewAccount(newAccountData)
-                    this.findNavController().navigate(R.id.action_registrationFragment_to_mainMenu)
-                }
+            val inputedText = adapter.getInputedText()
+            val newAccountData = Account(0, inputedText[0], inputedText[1], inputedText[2])
+            if (DataValidator.isValidInput(requireContext(), (activity as MainActivity).accountDao, newAccountData, inputedText[3])){
+                accountDataManager.logInAccount(newAccountData)
+                (activity as MainActivity).accountDao.insertNewAccount(newAccountData)
+                this.findNavController().navigate(R.id.action_registrationFragment_to_mainMenu)
             }
         }
 

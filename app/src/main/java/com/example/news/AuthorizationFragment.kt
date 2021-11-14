@@ -13,11 +13,6 @@ import com.example.news.databinding.FragmentAuthorizationBinding
 class AuthorizationFragment : Fragment() {
     private lateinit var activityBinding: FragmentAuthorizationBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

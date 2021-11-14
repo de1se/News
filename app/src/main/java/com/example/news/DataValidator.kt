@@ -5,6 +5,8 @@ import android.util.Patterns
 import android.widget.Toast
 
 object DataValidator {
+    private val valuePattern = Regex("(.*[a-zA-Z0-9._-])")
+
     fun isValidInput(context: Context, accountDao: AccountDao, accountInformation: Account, repeatedPassword: String): Boolean {
         if (!isValidLogin(context, accountInformation.login)) {
             return false
@@ -44,12 +46,17 @@ object DataValidator {
     }
     
     private fun isValidLogin(context: Context, login: String?): Boolean {
-        return if (login!!.isEmpty()) {
+        if (login!!.isEmpty()) {
             showToast(context.getString(R.string.ERROR_MESSAGE_LOGIN_EMPTY), context)
-            false
-        } else {
-            true
+            return false
         }
+
+        if (!login.matches(valuePattern)){
+            showToast(context.getString(R.string.ERROR_MESSAGE_LOGIN_INVALID), context)
+            return false
+        }
+
+        return true
     }
 
     private fun isValidEmail(context: Context, accountDao: AccountDao, email: String?): Boolean {
@@ -77,8 +84,18 @@ object DataValidator {
             return false
         }
 
+        if (!password.matches(valuePattern)) {
+            showToast(context.getString(R.string.ERROR_MESSAGE_PASSWORD_INVALID), context)
+            return false
+        }
+
         if (repeatedPassword.isEmpty()) {
             showToast(context.getString(R.string.ERROR_MESSAGE_REPEATED_PASSWORD_EMPTY), context)
+            return false
+        }
+
+        if (!repeatedPassword.matches(valuePattern)) {
+            showToast(context.getString(R.string.ERROR_MESSAGE_PASSWORD_INVALID), context)
             return false
         }
 
@@ -93,6 +110,11 @@ object DataValidator {
     private fun isValidPassword(context: Context, accountDao: AccountDao, login: String?, password: String?): Boolean {
         if (password!!.isEmpty()) {
             showToast(context.getString(R.string.ERROR_MESSAGE_PASSWORD_EMPTY), context)
+            return false
+        }
+
+        if (!password.matches(valuePattern)) {
+            showToast(context.getString(R.string.ERROR_MESSAGE_PASSWORD_INVALID), context)
             return false
         }
 

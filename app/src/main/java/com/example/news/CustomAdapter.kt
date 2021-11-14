@@ -5,8 +5,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputLayout
 
 class CustomAdapter(private val itemList: MutableList<String>, private val inputTypeList: MutableList<Int>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
@@ -18,8 +18,11 @@ class CustomAdapter(private val itemList: MutableList<String>, private val input
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.editText?.hint = itemList[position]
-        holder.editText?.inputType = 1 or inputTypeList[position]
+        holder.textInputLayout?.hint = itemList[position]
+        holder.textInputLayout?.editText?.inputType = 1 or inputTypeList[position]
+        if (inputTypeList[position] == 128) {
+            holder.textInputLayout?.setPasswordVisibilityToggleEnabled(true)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -31,11 +34,10 @@ class CustomAdapter(private val itemList: MutableList<String>, private val input
     }
 
     inner class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
-        var editText: EditText? = null
-
+        var textInputLayout: TextInputLayout? = null
         init {
-            editText = itemView.findViewById(R.id.editText)
-            editText?.addTextChangedListener(object : TextWatcher {
+            textInputLayout = itemView.findViewById(R.id.textInputLayout)
+            textInputLayout?.editText?.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
                 }

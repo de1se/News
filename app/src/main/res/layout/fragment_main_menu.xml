@@ -6,15 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".MainMenu"
     android:orientation="vertical"
-    android:background="@drawable/background">
+    android:background="@drawable/background" >
 
     <Button
         android:id="@+id/exitFromAccountButton"
         android:layout_width="210dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="300dp"
         android:layout_gravity="center_horizontal"
-        android:background="#1C1C19"
+        android:backgroundTint="@color/button_background_color"
         android:text="@string/exitFromAccountButton"
         android:textColor="#E7D2D5" />
+
 </LinearLayout>

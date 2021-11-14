@@ -11,15 +11,11 @@ import com.example.news.databinding.FragmentMainMenuBinding
 class MainMenu : Fragment() {
     private lateinit var activityBinding: FragmentMainMenuBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         activityBinding = FragmentMainMenuBinding.inflate(inflater, container, false)
         return activityBinding.root
     }
@@ -34,4 +30,6 @@ class MainMenu : Fragment() {
             this.findNavController().navigate(R.id.action_mainMenu_to_authorizationFragment)
         }
     }
+
+
 }

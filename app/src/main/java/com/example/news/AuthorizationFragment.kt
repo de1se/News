@@ -1,14 +1,14 @@
 package com.example.news
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.news.databinding.FragmentAuthorizationBinding
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 
 class AuthorizationFragment : Fragment() {
     private lateinit var activityBinding: FragmentAuthorizationBinding
@@ -18,7 +18,7 @@ class AuthorizationFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        activityBinding = FragmentAuthorizationBinding.inflate(inflater, container,false)
+        activityBinding = FragmentAuthorizationBinding.inflate(inflater, container, false)
         return activityBinding.root
     }
 
@@ -26,35 +26,72 @@ class AuthorizationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val accountDataManager = AccountDataManager(requireContext())
-        val recyclerView: RecyclerView = activityBinding.recyclerView
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = CustomAdapter(getHintList(), getInputTypeList())
-        val adapter = recyclerView.adapter as CustomAdapter
+        setupListeners()
 
         activityBinding.authorizationButton.setOnClickListener {
-            val inputedText = adapter.getInputedText()
-            if (DataValidator.isValidInput(requireContext(), (activity as MainActivity).accountDao, inputedText[0], inputedText[1])) {
-                accountDataManager.logInAccount((activity as MainActivity).accountDao.findByLogin(inputedText[0]))
+            if (isValidInput()) {
+                accountDataManager.logInAccount(
+                    (activity as MainActivity).accountDao.findByLogin(
+                        activityBinding.textInputLayoutLogin.toString()
+                    )
+                )
                 this.findNavController().navigate(R.id.action_authorizationFragment_to_mainMenu)
             }
         }
 
         activityBinding.switchToRegistrationButton.setOnClickListener {
-            this.findNavController().navigate(R.id.action_authorizationFragment_to_registrationFragment)
+            this.findNavController()
+                .navigate(R.id.action_authorizationFragment_to_registrationFragment)
         }
     }
 
-    private fun getHintList(): MutableList<String> {
-        val authorizationList: MutableList<String> = resources.getStringArray(R.array.hintList).toMutableList()
-        authorizationList.removeAt(1)
-        authorizationList.removeAt(2)
-        return authorizationList
+    private fun isValidInput(): Boolean =
+        DataValidator.validateLoginSignIn(
+            activityBinding.textInputLayoutLogin,
+            (activity as MainActivity).accountDao,
+            requireContext()
+        ) &&
+        DataValidator.validatePassword(
+            activityBinding.textInputLayoutPassword,
+            activityBinding.textInputLayoutLogin,
+            (activity as MainActivity).accountDao,
+            requireContext()
+        )
+
+    private fun setupListeners() {
+        activityBinding.textInputLayoutLogin.editText?.addTextChangedListener(
+            TextFieldValidation(
+                activityBinding.textInputLayoutLogin
+            )
+        )
+        activityBinding.textInputLayoutPassword.editText?.addTextChangedListener(
+            TextFieldValidation(
+                activityBinding.textInputLayoutPassword
+            )
+        )
     }
 
-    private fun getInputTypeList(): MutableList<Int> {
-        val authorizationList: MutableList<Int> = resources.getIntArray(R.array.inputTypeList).toMutableList()
-        authorizationList.removeAt(1)
-        authorizationList.removeAt(2)
-        return authorizationList
+    inner class TextFieldValidation(private val view: View) : TextWatcher {
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        override fun afterTextChanged(p0: Editable?) {}
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            when (view.id) {
+                R.id.textInputLayoutLogin -> {
+                    DataValidator.validateLoginSignIn(
+                        activityBinding.textInputLayoutLogin,
+                        (activity as MainActivity).accountDao, requireContext()
+                    )
+                }
+                R.id.textInputLayoutPassword -> {
+                    DataValidator.validatePassword(
+                        activityBinding.textInputLayoutPassword,
+                        activityBinding.textInputLayoutLogin,
+                        (activity as MainActivity).accountDao,
+                        requireContext()
+                    )
+                }
+            }
+        }
     }
+
 }

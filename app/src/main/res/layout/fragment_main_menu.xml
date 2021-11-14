@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainMenu"
+    android:background="@drawable/background"
     android:orientation="vertical"
-    android:background="@drawable/background" >
+    tools:context=".MainMenu">
 
     <Button
         android:id="@+id/exitFromAccountButton"
         android:layout_width="210dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="300dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="300dp"
         android:backgroundTint="@color/button_background_color"
         android:text="@string/exitFromAccountButton"
-        android:textColor="#E7D2D5" />
-
+        android:textColor="@color/main_white" />
 </LinearLayout>

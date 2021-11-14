@@ -1,13 +1,13 @@
 package com.example.news
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.news.databinding.FragmentRegistrationBinding
 
 class RegistrationFragment : Fragment() {
@@ -18,7 +18,7 @@ class RegistrationFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        activityBinding = FragmentRegistrationBinding.inflate(inflater, container,false)
+        activityBinding = FragmentRegistrationBinding.inflate(inflater, container, false)
         return activityBinding.root
     }
 
@@ -30,19 +30,20 @@ class RegistrationFragment : Fragment() {
             this.findNavController().navigate(R.id.action_registrationFragment_to_mainMenu)
         }
 
-        val recyclerView: RecyclerView = activityBinding.recyclerView
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = CustomAdapter(getHintList(), getInputTypeList())
-        val adapter = recyclerView.adapter as CustomAdapter
+        setupListeners()
 
         activityBinding.termsOfService.setOnClickListener {
             activityBinding.registrationButton.isEnabled = activityBinding.termsOfService.isChecked
         }
 
         activityBinding.registrationButton.setOnClickListener {
-            val inputedText = adapter.getInputedText()
-            val newAccountData = Account(0, inputedText[0], inputedText[1], inputedText[2])
-            if (DataValidator.isValidInput(requireContext(), (activity as MainActivity).accountDao, newAccountData, inputedText[3])){
+            val newAccountData = Account(
+                0,
+                activityBinding.textInputLayoutLogin.toString(),
+                activityBinding.textInputLayoutEmail.toString(),
+                activityBinding.textInputLayoutPassword.toString()
+            )
+            if (isValidInput()) {
                 accountDataManager.logInAccount(newAccountData)
                 (activity as MainActivity).accountDao.insertNewAccount(newAccountData)
                 this.findNavController().navigate(R.id.action_registrationFragment_to_mainMenu)
@@ -50,15 +51,87 @@ class RegistrationFragment : Fragment() {
         }
 
         activityBinding.switchToAuthorizationButton.setOnClickListener {
-            this.findNavController().navigate(R.id.action_registrationFragment_to_authorizationFragment)
+            this.findNavController()
+                .navigate(R.id.action_registrationFragment_to_authorizationFragment)
         }
     }
 
-    private fun getHintList(): MutableList<String> {
-        return resources.getStringArray(R.array.hintList).toMutableList()
+    private fun isValidInput(): Boolean =
+        DataValidator.validateLoginSignUp(
+            activityBinding.textInputLayoutLogin,
+            (activity as MainActivity).accountDao,
+            requireContext()
+        ) &&
+        DataValidator.validateEmail(
+            activityBinding.textInputLayoutEmail,
+            (activity as MainActivity).accountDao,
+            requireContext()
+        ) &&
+        DataValidator.validatePassword(
+            activityBinding.textInputLayoutPassword,
+            requireContext()
+        ) &&
+        DataValidator.validRepeatedPassword(
+            activityBinding.textInputLayoutPassword,
+            activityBinding.textInputLayoutRepeatedPassword,
+            requireContext()
+        )
+
+    private fun setupListeners() {
+        activityBinding.textInputLayoutLogin.editText?.addTextChangedListener(
+            TextFieldValidation(
+                activityBinding.textInputLayoutLogin
+            )
+        )
+        activityBinding.textInputLayoutEmail.editText?.addTextChangedListener(
+            TextFieldValidation(
+                activityBinding.textInputLayoutEmail
+            )
+        )
+        activityBinding.textInputLayoutPassword.editText?.addTextChangedListener(
+            TextFieldValidation(
+                activityBinding.textInputLayoutPassword
+            )
+        )
+        activityBinding.textInputLayoutRepeatedPassword.editText?.addTextChangedListener(
+            TextFieldValidation(activityBinding.textInputLayoutRepeatedPassword)
+        )
     }
 
-    private fun getInputTypeList(): MutableList<Int> {
-        return resources.getIntArray(R.array.inputTypeList).toMutableList()
+    inner class TextFieldValidation(private val view: View) : TextWatcher {
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        override fun afterTextChanged(p0: Editable?) {}
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            when (view.id) {
+                R.id.textInputLayoutLogin -> {
+                    DataValidator.validateLoginSignUp(
+                        activityBinding.textInputLayoutLogin,
+                        (activity as MainActivity).accountDao,
+                        requireContext()
+                    )
+                }
+                R.id.textInputLayoutEmail -> {
+                    DataValidator.validateEmail(
+                        activityBinding.textInputLayoutEmail,
+                        (activity as MainActivity).accountDao,
+                        requireContext()
+                    )
+                }
+                R.id.textInputLayoutPassword -> {
+                    DataValidator.validatePassword(
+                        activityBinding.textInputLayoutPassword,
+                        requireContext()
+                    )
+                }
+                R.id.textInputLayoutRepeatedPassword -> {
+                    DataValidator.validRepeatedPassword(
+                        activityBinding.textInputLayoutPassword,
+                        activityBinding.textInputLayoutRepeatedPassword,
+                        requireContext()
+                    )
+                }
+            }
+        }
     }
+
 }

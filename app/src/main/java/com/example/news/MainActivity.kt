@@ -18,7 +18,11 @@ class MainActivity : AppCompatActivity() {
         activityBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
 
-        val database = Room.databaseBuilder(applicationContext, AccountDatabase::class.java, "account_database").fallbackToDestructiveMigration().allowMainThreadQueries().build()
+        val database = Room.databaseBuilder(
+            applicationContext,
+            AccountDatabase::class.java,
+            "account_database"
+        ).fallbackToDestructiveMigration().allowMainThreadQueries().build()
         accountDao = database.accountDao()
     }
 
@@ -27,7 +31,8 @@ class MainActivity : AppCompatActivity() {
             backToast.cancel()
             super.finish()
         } else {
-            backToast = Toast.makeText(baseContext, "Нажмите кнопку назад ещё раз", Toast.LENGTH_SHORT)
+            backToast =
+                Toast.makeText(baseContext, "Нажмите кнопку назад ещё раз", Toast.LENGTH_SHORT)
             backToast.show()
         }
 

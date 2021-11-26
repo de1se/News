@@ -13,18 +13,14 @@ object DataValidator {
         accountDao: AccountDao,
         context: Context
     ): Boolean {
-        return if (login.toString().isEmpty()) {
+        return if (login.editText?.text.toString().isEmpty()) {
             showError(login, context.getString(R.string.ERROR_MESSAGE_FIELD_EMPTY))
             false
-        } else if (!login.toString().matches(valuePattern)) {
+        } else if (!login.editText?.text.toString().matches(valuePattern)) {
             showError(login, context.getString(R.string.ERROR_MESSAGE_FIELD_INVALID))
             false
         } else if (!accountDao.isLoginExist(login.editText?.text.toString())) {
-            Toast.makeText(
-                context,
-                context.getString(R.string.ERROR_MESSAGE_ACCOUNT_DOES_NOT_EXISTS),
-                Toast.LENGTH_SHORT
-            ).show()
+            showError(login, context.getString(R.string.ERROR_MESSAGE_ACCOUNT_DOES_NOT_EXISTS))
             false
         } else {
             login.error = ""
@@ -106,23 +102,19 @@ object DataValidator {
     }
 
     fun validatePassword(
-        password: TextInputLayout,
         login: TextInputLayout,
+        password: TextInputLayout,
         accountDao: AccountDao,
         context: Context
     ): Boolean {
-        return if (password.editText?.text.toString().isEmpty()) {
+        return if (login.editText?.text.toString().isEmpty() || password.editText?.text.toString().isEmpty()) {
+            showError(login, context.getString(R.string.ERROR_MESSAGE_FIELD_EMPTY))
             showError(password, context.getString(R.string.ERROR_MESSAGE_FIELD_EMPTY))
             false
         } else if (!password.editText?.text.toString().matches(valuePattern)) {
             showError(password, context.getString(R.string.ERROR_MESSAGE_FIELD_INVALID))
             false
-        } else if (accountDao.findByLogin(login.editText?.text.toString()).password.toString() != password.editText?.text.toString()) {
-            Toast.makeText(
-                context,
-                context.getString(R.string.ERROR_MESSAGE_INVALID_LOGIN_OR_PASSWORD),
-                Toast.LENGTH_SHORT
-            ).show()
+        } else if (!accountDao.findByLogin(login.editText?.text.toString()).password.equals(password.editText?.text.toString())) {
             false
         } else {
             password.error = ""

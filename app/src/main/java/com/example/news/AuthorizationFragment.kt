@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.Toast
 
 class AuthorizationFragment : Fragment() {
     private lateinit var activityBinding: FragmentAuthorizationBinding
@@ -32,7 +33,7 @@ class AuthorizationFragment : Fragment() {
             if (isValidInput()) {
                 accountDataManager.logInAccount(
                     (activity as MainActivity).accountDao.findByLogin(
-                        activityBinding.textInputLayoutLogin.toString()
+                        activityBinding.textInputLayoutLogin.editText?.text.toString()
                     )
                 )
                 this.findNavController().navigate(R.id.action_authorizationFragment_to_mainMenu)
@@ -45,18 +46,29 @@ class AuthorizationFragment : Fragment() {
         }
     }
 
-    private fun isValidInput(): Boolean =
-        DataValidator.validateLoginSignIn(
-            activityBinding.textInputLayoutLogin,
-            (activity as MainActivity).accountDao,
-            requireContext()
-        ) &&
-        DataValidator.validatePassword(
-            activityBinding.textInputLayoutPassword,
-            activityBinding.textInputLayoutLogin,
-            (activity as MainActivity).accountDao,
-            requireContext()
-        )
+    private fun isValidInput(): Boolean {
+        return if (DataValidator.validateLoginSignIn(
+                activityBinding.textInputLayoutLogin,
+                (activity as MainActivity).accountDao,
+                requireContext()
+            ) &&
+            DataValidator.validatePassword(
+                activityBinding.textInputLayoutLogin,
+                activityBinding.textInputLayoutPassword,
+                (activity as MainActivity).accountDao,
+                requireContext()
+            )
+        ) {
+            true
+        } else {
+            Toast.makeText(
+                context,
+                context?.getString(R.string.ERROR_MESSAGE_INVALID_LOGIN_OR_PASSWORD),
+                Toast.LENGTH_SHORT
+            ).show()
+            false
+        }
+    }
 
     private fun setupListeners() {
         activityBinding.textInputLayoutLogin.editText?.addTextChangedListener(
@@ -85,13 +97,10 @@ class AuthorizationFragment : Fragment() {
                 R.id.textInputLayoutPassword -> {
                     DataValidator.validatePassword(
                         activityBinding.textInputLayoutPassword,
-                        activityBinding.textInputLayoutLogin,
-                        (activity as MainActivity).accountDao,
                         requireContext()
                     )
                 }
             }
         }
     }
-
 }

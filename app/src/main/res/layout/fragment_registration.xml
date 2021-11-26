@@ -9,6 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
         tools:context=".MainActivity">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -17,7 +18,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="100dp"
             android:textColorHint="@color/main_white"
             app:boxStrokeColor="@color/main_white"
             app:boxStrokeErrorColor="@color/main_yellow"
